@@ -1,0 +1,78 @@
+name: tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: ${{ matrix.os }} / Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.9", "3.11", "3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 设置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: 安装
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: 跑测试
+        run: python -m pytest -q
+
+      # 用真实的开源仿真器产出一条波形，验证整条链路
+      # （示例里提交的波形是在 ModelSim 下生成的，这里用 Icarus 交叉验证
+      #   解析器不依赖任何特定仿真器的导出习惯）
+      - name: 安装 Icarus Verilog
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y iverilog
+
+      - name: 端到端复现（Linux）
+        if: runner.os == 'Linux'
+        run: python examples/run_demo.py
+
+      - name: 检查命令行能正常调用
+        run: |
+          specdiff --version
+          specdiff info examples/traffic_bug/counter8.vcd
+          specdiff index examples/traffic_bug/counter8.vcd
+
+      # 三件事一起验：有 bug 的设计必须被抓到、修好的必须通过、
+      # 而且断言本身必须有鉴别力（变异自检 PASS）。
+      # 这是这个项目最核心的承诺，所以放进 CI 每次跑。
+      #
+      # 注意：这些步骤在 Windows 上跑的是 pwsh，**不能**用 `\` 续行
+      # （那是 bash 语法，pwsh 的续行符是反引号）。
+      # 所以每条命令都写成单行，三种 shell 下都成立。
+      - name: 端到端契约检查（有 bug 的设计必须被抓到）
+        shell: bash
+        run: |
+          set +e
+          specdiff check examples/traffic_bug/counter8.vcd examples/traffic_bug/counter.spec.yaml
+          code=$?
+          if [ "$code" -ne 1 ]; then
+            echo "::error::有 bug 的设计应当以退出码 1 报错，实际是 $code"
+            exit 1
+          fi
+
+      - name: 端到端契约检查（修好的设计必须通过）
+        run: specdiff check examples/traffic_bug/counter8_fixed.vcd examples/traffic_bug/counter.spec.yaml
+
+      - name: 变异自检（证明断言有鉴别力）
+        run: specdiff check examples/traffic_bug/counter8_fixed.vcd examples/traffic_bug/counter.spec.yaml --selftest
+
+      - name: 真实项目示例（876 次断言）
+        run: specdiff check examples/real_project/win3x3.vcd examples/real_project/win3x3.spec.yaml
