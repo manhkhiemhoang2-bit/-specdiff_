@@ -1,0 +1,71 @@
+# 规格文件：win3x3 窗口几何模块的接口契约
+#
+# 这份规格直接来自 check_win3x3.py 里写明的契约（A/C/D 三项），
+# 期望值**不读 RTL 实现**，只按接口协议推导。
+#
+# 与 check_win3x3.py 的分工：
+#   - 几何反解（B 项）需要 36 个抽头逐一反解坐标，属于项目专有逻辑，
+#     留在原脚本里更合适；
+#   - 延迟、握手稳定性、不定态这些**通用契约**交给 specdiff，
+#     好处是能精确定位到"第几拍、哪几位"，而且换项目能复用。
+
+signals:
+  # 输入侧
+  I_tvalid: dut.I_tvalid
+  I_tlast: dut.I_tlast
+  I_tuser: dut.I_tuser
+  I_tdata: dut.I_tdata
+  I_tready: dut.I_tready
+  # 输出侧
+  O_tvalid: dut.O_tvalid
+  O_tlast: dut.O_tlast
+  O_tuser: dut.O_tuser
+  O_tdata: dut.O_tdata
+  O_window: dut.O_window
+  O_window_valid: dut.O_window_valid
+
+const:
+  LATENCY: 2          # 契约：输出相对输入延迟 2 拍
+  TDATA_W: 96         # 每拍 96 位 = 4 像素 × 24 位
+
+rules:
+  # ---- A. 延迟：四个握手信号都必须逐拍精确等于输入延迟 2 拍 ----
+  - name: tvalid 延迟2拍
+    kind: latency
+    cycles: 2
+    pairs:
+      - [O_tvalid, I_tvalid]
+    note: 契约 A：O_tvalid = I_tvalid 延迟 2 拍
+
+  - name: tlast 延迟2拍
+    kind: latency
+    cycles: 2
+    pairs:
+      - [O_tlast, I_tlast]
+    note: 契约 A：O_tlast = I_tlast 延迟 2 拍
+
+  - name: tuser 延迟2拍
+    kind: latency
+    cycles: 2
+    pairs:
+      - [O_tuser, I_tuser]
+    note: 契约 A：O_tuser = I_tuser 延迟 2 拍
+
+  - name: tdata 延迟2拍
+    kind: latency
+    cycles: 2
+    pairs:
+      - [O_tdata, I_tdata]
+    note: 契约 A：O_tdata = I_tdata 延迟 2 拍
+
+  # ---- C. 不定态：有效拍上不允许出现 X/Z ----
+  - name: 有效输出不得含不定态
+    kind: no_x
+    signals: [O_tdata, O_window]
+    when: O_tvalid == 1
+    note: 契约 C：有效拍上 O_window / O_tdata 不允许出现 x/z
+
+  - name: 窗口有效标志不得含不定态
+    kind: no_x
+    signals: [O_window_valid]
+    note: 契约 D：X 不得漏到输出
