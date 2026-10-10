@@ -1,0 +1,51 @@
+# 规格文件：8 位计数器应该怎样
+#
+# 注意这里的期望值不是从 RTL 抄来的，而是从**设计契约**推导：
+#   "en 有效时每拍加一，en 无效时保持，复位后归零"
+# 所以它能抓住"实现和规格不符"，而拿两份波形互比做不到这一点。
+#
+# 表达式里可用的名字：
+#   cur.信号 / out.信号 / inp.信号   这一拍的值
+#   prev.信号                        上一拍的值
+#   cyc                              拍号（从 0 开始）
+#   const.名字                       下面定义的常量
+# （不能写 in.信号 —— in 是 Python 关键字）
+
+signals:
+  clk: dut.clk
+  rst_n: dut.rst_n
+  en: dut.en
+  count: dut.count
+  carry: dut.carry
+
+const:
+  WIDTH: 8
+
+rules:
+  - name: 使能时每拍加一
+    kind: formula
+    target: count
+    when: cyc > 0 and prev.count is not None
+    expr: (prev.count + 1) % 256 if cur.en == 1 else prev.count
+    note: |
+      契约：en 有效则加一，无效则保持。
+      注意用的是 **cur.en** 而不是 prev.en —— en 和它引起的计数变化
+      在同一拍上被采样（en 在边沿前拉高，该边沿的计数值就变了）。
+      写成 prev.en 会差一拍，在每个使能起点误报一次。
+
+  - name: 复位后从零开始
+    kind: formula
+    target: count
+    when: cyc == 0
+    expr: 0
+    note: 复位释放后的第一拍必须是 0
+
+  - name: 计数不得出现不定态
+    kind: no_x
+    signals: [count]
+
+  - name: 进位只在满量程时置起
+    kind: formula
+    target: carry
+    expr: 1 if cur.count == 255 else 0
+    note: 契约：carry = (count == 255)
