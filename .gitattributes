@@ -1,0 +1,8 @@
+# 统一换行符：仓库内一律 LF，检出时按平台自动转换。
+# 不这么做的话，Windows 上提交的文件会让 diff 充满噪音，CI 也会因换行符差异失败。
+* text=auto eol=lf
+
+# 波形文件是二进制/无换行语义的数据，不要做任何转换
+*.vcd binary
+*.fst binary
+*.wlf binary

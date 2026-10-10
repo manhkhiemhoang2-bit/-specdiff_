@@ -1,0 +1,39 @@
+# 仿真产物：波形、编译库、日志
+*.vcd
+*.fst
+*.wlf
+work/
+transcript
+vsim.wtf
+*.o
+*.so
+
+# 但示例波形要入库：README 里的演示靠它，别人克隆下来就能复现结论
+!examples/**/*.vcd
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+
+# 临时调试脚本
+_dbg*.py
+
+# 临时文件（提交信息、调试脚本）
+_cmsg.txt
+_commitmsg.txt
+_msg.txt
+_dbg*.py

@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "specdiff"
+version = "0.1.0"
+description = "按规格检查仿真波形，直接定位到「第几拍、哪个信号、哪几位」——不需要参照波形，从接口契约推导期望值"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+keywords = ["verilog", "rtl", "verification", "vcd", "waveform", "debug", "ai-agent", "eda", "formal", "assertion"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
+    "Intended Audience :: Developers",
+]
+
+# 零运行时依赖是刻意设计：任何环境（CI 容器、EDA 服务器、离线机器）都能直接跑
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+specdiff = "specdiff.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/manhkhiemhoang2-bit/-specdiff_"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
