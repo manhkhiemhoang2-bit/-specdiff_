@@ -1,0 +1,16 @@
+# specdiff 比对配置
+#
+# map 段声明「波形里的哪根线」对应「标准答案里的哪个字段」。
+# width 是期望位宽：用于按位比较，也用于在同名信号里挑出正确的那一根
+#（层次化设计里 tb.count 和 tb.dut.count 会同时存在，位宽能区分它们）。
+
+map:
+  - rtl: dut.count        # 用全路径，避开 tb 层被拆开的同名信号
+    golden: count         # 标准答案里的字段名
+    width: 8
+    note: 计数器的当前值
+
+  - rtl: dut.carry
+    golden: carry
+    width: 1
+    note: 进位标志

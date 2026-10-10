@@ -1,0 +1,206 @@
+{
+  "description": "8 位计数器标准答案：en 有效后每拍加一",
+  "en_high_from_cycle": 3,
+  "cycles": [
+    {
+      "cycle": 0,
+      "count": 0,
+      "carry": 0
+    },
+    {
+      "cycle": 1,
+      "count": 0,
+      "carry": 0
+    },
+    {
+      "cycle": 2,
+      "count": 0,
+      "carry": 0
+    },
+    {
+      "cycle": 3,
+      "count": 1,
+      "carry": 0
+    },
+    {
+      "cycle": 4,
+      "count": 2,
+      "carry": 0
+    },
+    {
+      "cycle": 5,
+      "count": 3,
+      "carry": 0
+    },
+    {
+      "cycle": 6,
+      "count": 4,
+      "carry": 0
+    },
+    {
+      "cycle": 7,
+      "count": 5,
+      "carry": 0
+    },
+    {
+      "cycle": 8,
+      "count": 6,
+      "carry": 0
+    },
+    {
+      "cycle": 9,
+      "count": 7,
+      "carry": 0
+    },
+    {
+      "cycle": 10,
+      "count": 8,
+      "carry": 0
+    },
+    {
+      "cycle": 11,
+      "count": 9,
+      "carry": 0
+    },
+    {
+      "cycle": 12,
+      "count": 10,
+      "carry": 0
+    },
+    {
+      "cycle": 13,
+      "count": 11,
+      "carry": 0
+    },
+    {
+      "cycle": 14,
+      "count": 12,
+      "carry": 0
+    },
+    {
+      "cycle": 15,
+      "count": 13,
+      "carry": 0
+    },
+    {
+      "cycle": 16,
+      "count": 14,
+      "carry": 0
+    },
+    {
+      "cycle": 17,
+      "count": 15,
+      "carry": 0
+    },
+    {
+      "cycle": 18,
+      "count": 16,
+      "carry": 0
+    },
+    {
+      "cycle": 19,
+      "count": 17,
+      "carry": 0
+    },
+    {
+      "cycle": 20,
+      "count": 18,
+      "carry": 0
+    },
+    {
+      "cycle": 21,
+      "count": 19,
+      "carry": 0
+    },
+    {
+      "cycle": 22,
+      "count": 20,
+      "carry": 0
+    },
+    {
+      "cycle": 23,
+      "count": 21,
+      "carry": 0
+    },
+    {
+      "cycle": 24,
+      "count": 22,
+      "carry": 0
+    },
+    {
+      "cycle": 25,
+      "count": 23,
+      "carry": 0
+    },
+    {
+      "cycle": 26,
+      "count": 24,
+      "carry": 0
+    },
+    {
+      "cycle": 27,
+      "count": 25,
+      "carry": 0
+    },
+    {
+      "cycle": 28,
+      "count": 26,
+      "carry": 0
+    },
+    {
+      "cycle": 29,
+      "count": 27,
+      "carry": 0
+    },
+    {
+      "cycle": 30,
+      "count": 28,
+      "carry": 0
+    },
+    {
+      "cycle": 31,
+      "count": 29,
+      "carry": 0
+    },
+    {
+      "cycle": 32,
+      "count": 30,
+      "carry": 0
+    },
+    {
+      "cycle": 33,
+      "count": 31,
+      "carry": 0
+    },
+    {
+      "cycle": 34,
+      "count": 32,
+      "carry": 0
+    },
+    {
+      "cycle": 35,
+      "count": 33,
+      "carry": 0
+    },
+    {
+      "cycle": 36,
+      "count": 34,
+      "carry": 0
+    },
+    {
+      "cycle": 37,
+      "count": 35,
+      "carry": 0
+    },
+    {
+      "cycle": 38,
+      "count": 36,
+      "carry": 0
+    },
+    {
+      "cycle": 39,
+      "count": 37,
+      "carry": 0
+    }
+  ]
+}
